@@ -36,7 +36,6 @@ private slots:
     QLabel label;
     Ref<QString> text("1");
 
-    // insecure access to label
     reactive_watch(&label, [&] { label.setText(text); });
     reactive_watch(&label, [&] { label.setToolTip(text + "ttp"); });
     QCOMPARE(text.value(), "1");
@@ -68,6 +67,22 @@ private slots:
     reactive_watch(&label, [&] { label.setText(*text); });
 
     text.reset();
+  }
+
+  void test_multiple_refs() {
+    QLabel label;
+    Ref<QString> text("a");
+    Ref<int> number(1);
+
+    reactive_watch(&label,
+                   [&] { label.setText(text + QString::number(number)); });
+    QCOMPARE(label.text(), "a1");
+
+    text = "b";
+    QCOMPARE(label.text(), "b1");
+
+    number = 2;
+    QCOMPARE(label.text(), "b2");
   }
 };
 
