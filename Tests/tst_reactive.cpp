@@ -18,7 +18,6 @@ private slots:
     QLabel label;
     Ref<QString> text("1");
 
-    // insecure access to label
     reactive_watch(&label, [&] { label.setText(text); });
     QCOMPARE(text.value(), "1");
     QCOMPARE(label.text(), "1");
